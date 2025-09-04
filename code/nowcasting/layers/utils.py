@@ -5,12 +5,13 @@ import torch.nn as nn
 
 def make_grid(input):
     B, C, H, W = input.size()
+    device, dtype = input.device, input.dtype
     # mesh grid
-    xx = torch.arange(0, W).view(1, -1).repeat(H, 1).cuda()
-    yy = torch.arange(0, H).view(-1, 1).repeat(1, W).cuda()
+    xx = torch.arange(0, W, device=device, dtype=dtype).view(1, -1).repeat(H, 1)
+    yy = torch.arange(0, H, device=device, dtype=dtype).view(-1, 1).repeat(1, W)
     xx = xx.view(1, 1, H, W).repeat(B, 1, 1, 1)
     yy = yy.view(1, 1, H, W).repeat(B, 1, 1, 1)
-    grid = torch.cat((xx, yy), 1).float()
+    grid = torch.cat((xx, yy), 1).float()  # [B,2,H,W]
 
     return grid
 
